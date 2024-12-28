@@ -103,15 +103,29 @@ var loader = new THREE.GLTFLoader();
 var moto;
 loader.load('veiculos/moto3D/scene.gltf', function(gltf) {
     moto = gltf.scene;
-    moto.position.set(-10, 1, -5); // Definindo a posição inicial da moto
-    moto.scale.set(0.5, 0.5, 0.5); // Ajuste de escala
+    moto.position.set(-10, 1, -5);
+    moto.scale.set(0.5, 0.5, 0.5);
     moto.traverse(function(child) {
         if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
         }
     });
-    scene.add(moto); // Adiciona a moto à cena
+    scene.add(moto); 
+});
+
+var moto2;
+loader.load('veiculos/moto3D/scene.gltf', function(gltf) {
+    moto2 = gltf.scene;
+    moto2.position.set(-10, 1, -5);
+    moto2.scale.set(0.5, 0.5, 0.5);
+    moto2.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+    scene.add(moto2); 
 });
 
 var helicoptero;
@@ -282,6 +296,40 @@ loader.load('planetas/netuno3D/scene.gltf', function(gltf) {
     scene.add(netuno); // Adiciona Netuno à cena    
 });
 
+var buracoNegro;
+loader.load('planetas/buracoNegro3D/scene.gltf', function(gltf) {
+    buracoNegro = gltf.scene;
+    buracoNegro.position.set(150, 0, 0);
+    buracoNegro.scale.set(2, 2, 2);
+    buracoNegro.rotateX(THREE.MathUtils.degToRad(25)); 
+    buracoNegro.rotateZ(THREE.MathUtils.degToRad(10)); 
+    buracoNegro.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+    scene.add(buracoNegro); // Adiciona Buraco Negro à cena    
+});
+
+var buracoNegro2;
+loader.load('planetas/buracoNegro3D/scene.gltf', function(gltf) {
+    buracoNegro2 = gltf.scene;
+    buracoNegro2.position.set(70, 30, -200);
+    buracoNegro2.scale.set(1, 1, 1);
+    buracoNegro2.rotateX(THREE.MathUtils.degToRad(25)); 
+    buracoNegro2.rotateZ(THREE.MathUtils.degToRad(10)); 
+
+    buracoNegro2.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+
+    scene.add(buracoNegro2);
+});
+
 var curvaHelicoptero = new THREE.CatmullRomCurve3([
     new THREE.Vector3(-10, 3, 0),
     new THREE.Vector3(-7, 3, -7),
@@ -295,12 +343,12 @@ var curvaHelicoptero = new THREE.CatmullRomCurve3([
 ], true);
 
 var curvaAviao = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(0, 6.6, 0),
+    new THREE.Vector3(0, 6.3, 0),
     new THREE.Vector3(-4, 4, -3),
     new THREE.Vector3(-5, 0, -4),
-    new THREE.Vector3(-4, -5, -3),
+    new THREE.Vector3(-3.8, -5, -3),
     new THREE.Vector3(0, -6.6, 0),
-    new THREE.Vector3(4, -5, 3),
+    new THREE.Vector3(3.8, -5, 3),
     new THREE.Vector3(5, 0, 4), 
     new THREE.Vector3(4, 4, 3), 
 ], true);
@@ -318,7 +366,6 @@ var linhaTracejada = new THREE.Line(geometriaLinha, materialTracejado);
 linhaTracejada.computeLineDistances();
 
 scene.add(linhaTracejada);
-
 
 var progressoHelicoptero = 0;
 function moverHelicoptero() {
@@ -338,28 +385,45 @@ function moverHelicoptero() {
 
 var progresso = 0;
 function moverMoto() {
-  if (!moto) return; // Verifica se o modelo foi carregado
+  if (!moto) return;
 
   progresso += 0.002;
   if (progresso > 1) progresso = 0;
 
-  var posicao = curva.getPointAt(progresso); // Posição da moto na curva
-  var tangente = curva.getTangentAt(progresso); // Tangente da curva no ponto
+  var posicao = curva.getPointAt(progresso); 
+  var tangente = curva.getTangentAt(progresso); 
 
-  // Atualiza a posição da moto
   moto.position.copy(posicao);
 
-  // Ajusta a orientação da moto para seguir a tangente
   var matrizRotacao = new THREE.Matrix4();
   
-  // O eixo "up" da moto (direção vertical) deve ser o eixo Y
   var eixoUp = new THREE.Vector3(0, 1, 0);
   
-  // A frente da moto deve se alinhar com a tangente
   matrizRotacao.lookAt(posicao.clone().add(tangente), posicao, eixoUp);
   
-  // Aplica a rotação correta com a matriz de rotação
   moto.quaternion.setFromRotationMatrix(matrizRotacao);
+}
+
+var progresso2 = 0.5; 
+
+function moverMoto2() {
+  if (!moto2) return;
+
+  progresso2 += 0.002;
+  if (progresso2 > 1) progresso2 = 0;
+
+  var posicao = curva.getPointAt(progresso2); 
+  var tangente = curva.getTangentAt(progresso2); 
+
+  moto2.position.copy(posicao);
+
+  var matrizRotacao = new THREE.Matrix4();
+  
+  var eixoUp = new THREE.Vector3(0, 1, 0);
+  
+  matrizRotacao.lookAt(posicao.clone().add(tangente), posicao, eixoUp);
+  
+  moto2.quaternion.setFromRotationMatrix(matrizRotacao);
 }
 
 var progressoAviao = 0;
@@ -390,26 +454,34 @@ function moverAviao() {
 }
 
 
-// Configurações da câmera
 camera.position.set(0, 10, 20);
 camera.lookAt(0, 0, 0);
 
-// Adiciona OrbitControls
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true; // Suaviza o movimento
+controls.enableDamping = true;
 controls.dampingFactor = 0.05;
-controls.screenSpacePanning = false; // Impede movimento vertical puro com o botão direito do mouse
-controls.minDistance = 5; // Distância mínima de zoom
-controls.maxDistance = 50; // Distância máxima de zoom
-controls.maxPolarAngle = Math.PI / 2; // Impede rotação abaixo do horizonte
+controls.screenSpacePanning = false;
+controls.minDistance = 5; 
+controls.maxDistance = 50; 
+controls.maxPolarAngle = Math.PI / 2;
 
-// Renderização
 function animate() {
     requestAnimationFrame(animate);
     if(terra){
+        sol.rotation.y += 0.003;
+        mercurio.rotation.y += 0.003;
+        venus.rotation.y += 0.003;
         terra.rotation.y += 0.003;
+        marte.rotation.y += 0.003;
+        jupiter.rotation.y += 0.003;
+        saturno.rotation.y += 0.005;
+        urano.rotation.y += 0.003;
+        netuno.rotation.y += 0.003;
+        buracoNegro2.rotation.y += 0.01;
+        buracoNegro.rotation.y += 0.01;
     }
     moverMoto();
+    moverMoto2();
     moverHelicoptero();
     moverAviao();
     controls.update(); 

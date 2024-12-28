@@ -1,0 +1,11 @@
+Model Information:
+* title:	Black hole
+* source:	https://sketchfab.com/3d-models/black-hole-0e8583e9f5b34f43a37a0ad2c3deb784
+* author:	tamminen (https://sketchfab.com/tamminen)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Black hole" (https://sketchfab.com/3d-models/black-hole-0e8583e9f5b34f43a37a0ad2c3deb784) by tamminen (https://sketchfab.com/tamminen) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
