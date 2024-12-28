@@ -229,7 +229,7 @@ loader.load('planetas/marte3D/scene.gltf', function(gltf) {
 var jupiter;
 loader.load('planetas/jupiter3D/scene.gltf', function(gltf) {
     jupiter = gltf.scene;
-    jupiter.position.set(0, 0, 50);
+    jupiter.position.set(0, 0, 40);
     jupiter.scale.set(0.09, 0.09, 0.09);
     jupiter.traverse(function(child) {
         if (child.isMesh) {
@@ -238,6 +238,20 @@ loader.load('planetas/jupiter3D/scene.gltf', function(gltf) {
         }
     });
     scene.add(jupiter); // Adiciona Jupiter à cena    
+});
+
+var saturno;
+loader.load('planetas/saturno3D/scene.gltf', function(gltf) {
+    saturno = gltf.scene;
+    saturno.position.set(0, 0, 70);
+    saturno.scale.set(0.1, 0.1, 0.1);
+    saturno.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+    scene.add(saturno); // Adiciona Saturno à cena    
 });
 
 var curvaHelicoptero = new THREE.CatmullRomCurve3([
