@@ -212,6 +212,34 @@ loader.load('planetas/venus3D/scene.gltf', function(gltf) {
     scene.add(venus); // Adiciona Venus à cena    
 });
 
+var marte;
+loader.load('planetas/marte3D/scene.gltf', function(gltf) {
+    marte = gltf.scene;
+    marte.position.set(0, 0, 20);
+    marte.scale.set(5, 5, 5);
+    marte.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+    scene.add(marte); // Adiciona Marte à cena    
+});
+
+var jupiter;
+loader.load('planetas/jupiter3D/scene.gltf', function(gltf) {
+    jupiter = gltf.scene;
+    jupiter.position.set(0, 0, 50);
+    jupiter.scale.set(0.09, 0.09, 0.09);
+    jupiter.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+    scene.add(jupiter); // Adiciona Jupiter à cena    
+});
+
 var curvaHelicoptero = new THREE.CatmullRomCurve3([
     new THREE.Vector3(-10, 3, 0),
     new THREE.Vector3(-7, 3, -7),
