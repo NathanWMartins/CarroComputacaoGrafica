@@ -102,7 +102,7 @@ scene.add(pista);
 var loader = new THREE.GLTFLoader();
 var moto; // Variável para armazenar o modelo carregado
 
-loader.load('moto3D/scene.gltf', function(gltf) {
+loader.load('veiculos/moto3D/scene.gltf', function(gltf) {
     moto = gltf.scene;
     moto.position.set(-10, 1, -5); // Definindo a posição inicial da moto
     moto.scale.set(0.5, 0.5, 0.5); // Ajuste de escala
@@ -115,37 +115,8 @@ loader.load('moto3D/scene.gltf', function(gltf) {
     scene.add(moto); // Adiciona a moto à cena
 });
 
-// Variável progresso agora declarada corretamente
-var progresso = 0;
-
-// Movimento da moto na pista
-function moverMoto() {
-  if (!moto) return; // Verifica se o modelo foi carregado
-
-  progresso += 0.002;
-  if (progresso > 1) progresso = 0;
-
-  var posicao = curva.getPointAt(progresso); // Posição da moto na curva
-  var tangente = curva.getTangentAt(progresso); // Tangente da curva no ponto
-
-  // Atualiza a posição da moto
-  moto.position.copy(posicao);
-
-  // Ajusta a orientação da moto para seguir a tangente
-  var matrizRotacao = new THREE.Matrix4();
-  
-  // O eixo "up" da moto (direção vertical) deve ser o eixo Y
-  var eixoUp = new THREE.Vector3(0, 1, 0);
-  
-  // A frente da moto deve se alinhar com a tangente
-  matrizRotacao.lookAt(posicao.clone().add(tangente), posicao, eixoUp);
-  
-  // Aplica a rotação correta com a matriz de rotação
-  moto.quaternion.setFromRotationMatrix(matrizRotacao);
-}
-
 var helicoptero;
-loader.load('helicopter3D/scene.gltf', function(gltf) {
+loader.load('veiculos/helicopter3D/scene.gltf', function(gltf) {
     helicoptero = gltf.scene;
     helicoptero.position.set(0, 5, 0); // Posição inicial no céu
     helicoptero.scale.set(0.1, 0.1, 0.1); // Ajuste de escala
@@ -158,8 +129,22 @@ loader.load('helicopter3D/scene.gltf', function(gltf) {
     scene.add(helicoptero); // Adiciona o helicóptero à cena
 });
 
+var aviao;
+loader.load('veiculos/aviao3D/scene.gltf', function(gltf) {
+    aviao = gltf.scene;
+    aviao.position.set(0, 0, -40); 
+    aviao.scale.set(0.009, 0.009, 0.009);
+    aviao.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+    scene.add(aviao); // Adiciona o avião à cena
+});
+
 var sol;
-loader.load('sol3D/scene.gltf', function(gltf) {
+loader.load('planetas/sol3D/scene.gltf', function(gltf) {
     sol = gltf.scene;
     sol.position.set(10, 10, -30); // Posição inicial no céu
     sol.scale.set(1, 1, 1); // Ajuste de escala
@@ -173,7 +158,7 @@ loader.load('sol3D/scene.gltf', function(gltf) {
 });
 
 var lua;
-loader.load('lua3D/scene.gltf', function(gltf) {
+loader.load('planetas/lua3D/scene.gltf', function(gltf) {
     lua = gltf.scene;
     lua.position.set(4, 7, 0); // Posição inicial no céu
     lua.scale.set(0.0005, 0.0005, 0.0005); // Ajuste de escala
@@ -187,7 +172,7 @@ loader.load('lua3D/scene.gltf', function(gltf) {
 });
 
 var terra;
-loader.load('terra3D/scene.gltf', function(gltf) {
+loader.load('planetas/terra3D/scene.gltf', function(gltf) {
     terra = gltf.scene;
     terra.position.set(0, 0, 0); // Posição inicial no céu
     terra.scale.set(0.05, 0.05, 0.05); // Ajuste de escala
@@ -213,9 +198,37 @@ var curvaHelicoptero = new THREE.CatmullRomCurve3([
     new THREE.Vector3(-10, 3, 0),
 ], true);
 
-var progressoHelicoptero = 0;
+var curvaAviao = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0, 6.6, 0),  // Ponto mais alto
+    new THREE.Vector3(-4, 4, -3),  // Desce no eixo Y, move-se para trás no eixo Z
+    new THREE.Vector3(-5, 0, -4), // Ponto mais baixo no eixo Y
+    new THREE.Vector3(-4, -5, -3), // Sobe no eixo Y, move-se para trás no eixo Z
+    new THREE.Vector3(0, -6.6, 0), // Ponto mais baixo
+    new THREE.Vector3(4, -5, 3),  // Sobe no eixo Y, move-se para frente no eixo Z
+    new THREE.Vector3(5, 0, 4),  // Ponto no meio
+    new THREE.Vector3(4, 4, 3),  // Retorno ao ponto mais alto
+], true);
 
-// Movimento do helicóptero
+// Crie a geometria a partir da curva
+var pontosCurva = curvaAviao.getPoints(100); // Obtenha pontos ao longo da curva
+var geometriaLinha = new THREE.BufferGeometry().setFromPoints(pontosCurva);
+
+// Crie o material tracejado (branco)
+var materialTracejado = new THREE.LineDashedMaterial({
+    color: 0xffffff, // Cor da linha (branca)
+    dashSize: 0.5,   // Tamanho do traço
+    gapSize: 0.2     // Tamanho do espaço entre traços
+});
+
+// Crie a linha
+var linhaTracejada = new THREE.Line(geometriaLinha, materialTracejado);
+linhaTracejada.computeLineDistances(); // Necessário para linhas tracejadas
+
+// Adicione a linha à cena
+scene.add(linhaTracejada);
+
+
+var progressoHelicoptero = 0;
 function moverHelicoptero() {
   if (!helicoptero) return;
   progressoHelicoptero += 0.001;
@@ -230,6 +243,60 @@ function moverHelicoptero() {
   matrizRotacao.lookAt(posicao.clone().add(tangente), posicao, new THREE.Vector3(0, 1, 0));
   helicoptero.quaternion.setFromRotationMatrix(matrizRotacao);
 }
+
+var progresso = 0;
+function moverMoto() {
+  if (!moto) return; // Verifica se o modelo foi carregado
+
+  progresso += 0.002;
+  if (progresso > 1) progresso = 0;
+
+  var posicao = curva.getPointAt(progresso); // Posição da moto na curva
+  var tangente = curva.getTangentAt(progresso); // Tangente da curva no ponto
+
+  // Atualiza a posição da moto
+  moto.position.copy(posicao);
+
+  // Ajusta a orientação da moto para seguir a tangente
+  var matrizRotacao = new THREE.Matrix4();
+  
+  // O eixo "up" da moto (direção vertical) deve ser o eixo Y
+  var eixoUp = new THREE.Vector3(0, 1, 0);
+  
+  // A frente da moto deve se alinhar com a tangente
+  matrizRotacao.lookAt(posicao.clone().add(tangente), posicao, eixoUp);
+  
+  // Aplica a rotação correta com a matriz de rotação
+  moto.quaternion.setFromRotationMatrix(matrizRotacao);
+}
+
+var progressoAviao = 0;
+function moverAviao() {
+    if (!aviao || !curvaAviao) return;
+
+    progressoAviao += 0.001; 
+    if (progressoAviao > 1) progressoAviao = 0;
+
+    var posicao = curvaAviao.getPointAt(progressoAviao);
+    aviao.position.copy(posicao);
+
+    var centroTerra = new THREE.Vector3(0, 0, 0);
+    var direcaoParaCentro = centroTerra.clone().sub(posicao).normalize();
+
+    var tangente = curvaAviao.getTangentAt(progressoAviao).negate().normalize();
+
+    var matrizRotacao = new THREE.Matrix4();
+    matrizRotacao.lookAt(
+        posicao.clone().add(tangente), 
+        posicao,                    
+        direcaoParaCentro            
+    );
+
+    aviao.quaternion.setFromRotationMatrix(matrizRotacao);
+
+    aviao.rotateX(Math.PI);
+}
+
 
 // Configurações da câmera
 camera.position.set(0, 10, 20);
@@ -252,7 +319,8 @@ function animate() {
     }
     moverMoto();
     moverHelicoptero();
-    controls.update(); // Atualiza os controles da câmera
+    moverAviao();
+    controls.update(); 
     renderer.render(scene, camera);
 }
 
