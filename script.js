@@ -187,7 +187,7 @@ loader.load('planetas/terra3D/scene.gltf', function(gltf) {
 var mercurio;
 loader.load('planetas/mercurio3D/scene.gltf', function(gltf) {
     mercurio = gltf.scene;
-    mercurio.position.set(0, 0, -35);
+    mercurio.position.set(0, 0, -37);
     mercurio.scale.set(3.5, 3.5, 3.5);
     mercurio.traverse(function(child) {
         if (child.isMesh) {
@@ -196,6 +196,20 @@ loader.load('planetas/mercurio3D/scene.gltf', function(gltf) {
         }
     });
     scene.add(mercurio); // Adiciona Mercúrio à cena    
+});
+
+var venus;
+loader.load('planetas/venus3D/scene.gltf', function(gltf) {
+    venus = gltf.scene;
+    venus.position.set(0, 0, -24);
+    venus.scale.set(0.09, 0.09, 0.09);
+    venus.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+    scene.add(venus); // Adiciona Venus à cena    
 });
 
 var curvaHelicoptero = new THREE.CatmullRomCurve3([
