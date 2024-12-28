@@ -243,7 +243,7 @@ loader.load('planetas/jupiter3D/scene.gltf', function(gltf) {
 var saturno;
 loader.load('planetas/saturno3D/scene.gltf', function(gltf) {
     saturno = gltf.scene;
-    saturno.position.set(0, 0, 70);
+    saturno.position.set(0, 0, 75);
     saturno.scale.set(0.1, 0.1, 0.1);
     saturno.traverse(function(child) {
         if (child.isMesh) {
@@ -252,6 +252,34 @@ loader.load('planetas/saturno3D/scene.gltf', function(gltf) {
         }
     });
     scene.add(saturno); // Adiciona Saturno à cena    
+});
+
+var urano;
+loader.load('planetas/urano3D/scene.gltf', function(gltf) {
+    urano = gltf.scene;
+    urano.position.set(0, 0, 110);
+    urano.scale.set(0.05, 0.05, 0.05);
+    urano.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+    scene.add(urano); // Adiciona Urano à cena    
+});
+
+var netuno;
+loader.load('planetas/netuno3D/scene.gltf', function(gltf) {
+    netuno = gltf.scene;
+    netuno.position.set(0, 0, 130);
+    netuno.scale.set(0.05, 0.05, 0.05);
+    netuno.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+    scene.add(netuno); // Adiciona Netuno à cena    
 });
 
 var curvaHelicoptero = new THREE.CatmullRomCurve3([
