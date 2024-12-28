@@ -98,10 +98,9 @@ pista.castShadow = true;
 pista.receiveShadow = true;
 scene.add(pista);
 
-// Carregar o modelo 3D da moto
 var loader = new THREE.GLTFLoader();
-var moto; // Variável para armazenar o modelo carregado
 
+var moto;
 loader.load('veiculos/moto3D/scene.gltf', function(gltf) {
     moto = gltf.scene;
     moto.position.set(-10, 1, -5); // Definindo a posição inicial da moto
@@ -146,8 +145,8 @@ loader.load('veiculos/aviao3D/scene.gltf', function(gltf) {
 var sol;
 loader.load('planetas/sol3D/scene.gltf', function(gltf) {
     sol = gltf.scene;
-    sol.position.set(10, 10, -30); // Posição inicial no céu
-    sol.scale.set(1, 1, 1); // Ajuste de escala
+    sol.position.set(0, 0, -60); 
+    sol.scale.set(1.8, 1.8, 1.8);
     sol.traverse(function(child) {
         if (child.isMesh) {
             child.castShadow = true;
@@ -174,8 +173,8 @@ loader.load('planetas/lua3D/scene.gltf', function(gltf) {
 var terra;
 loader.load('planetas/terra3D/scene.gltf', function(gltf) {
     terra = gltf.scene;
-    terra.position.set(0, 0, 0); // Posição inicial no céu
-    terra.scale.set(0.05, 0.05, 0.05); // Ajuste de escala
+    terra.position.set(0, 0, 0); 
+    terra.scale.set(0.05, 0.05, 0.05); 
     terra.traverse(function(child) {
         if (child.isMesh) {
             child.castShadow = true;
@@ -185,7 +184,20 @@ loader.load('planetas/terra3D/scene.gltf', function(gltf) {
     scene.add(terra); // Adiciona o terra à cena    
 });
 
-// Curva do helicóptero
+var mercurio;
+loader.load('planetas/mercurio3D/scene.gltf', function(gltf) {
+    mercurio = gltf.scene;
+    mercurio.position.set(0, 0, -35);
+    mercurio.scale.set(3.5, 3.5, 3.5);
+    mercurio.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+    scene.add(mercurio); // Adiciona Mercúrio à cena    
+});
+
 var curvaHelicoptero = new THREE.CatmullRomCurve3([
     new THREE.Vector3(-10, 3, 0),
     new THREE.Vector3(-7, 3, -7),
@@ -199,32 +211,28 @@ var curvaHelicoptero = new THREE.CatmullRomCurve3([
 ], true);
 
 var curvaAviao = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(0, 6.6, 0),  // Ponto mais alto
-    new THREE.Vector3(-4, 4, -3),  // Desce no eixo Y, move-se para trás no eixo Z
-    new THREE.Vector3(-5, 0, -4), // Ponto mais baixo no eixo Y
-    new THREE.Vector3(-4, -5, -3), // Sobe no eixo Y, move-se para trás no eixo Z
-    new THREE.Vector3(0, -6.6, 0), // Ponto mais baixo
-    new THREE.Vector3(4, -5, 3),  // Sobe no eixo Y, move-se para frente no eixo Z
-    new THREE.Vector3(5, 0, 4),  // Ponto no meio
-    new THREE.Vector3(4, 4, 3),  // Retorno ao ponto mais alto
+    new THREE.Vector3(0, 6.6, 0),
+    new THREE.Vector3(-4, 4, -3),
+    new THREE.Vector3(-5, 0, -4),
+    new THREE.Vector3(-4, -5, -3),
+    new THREE.Vector3(0, -6.6, 0),
+    new THREE.Vector3(4, -5, 3),
+    new THREE.Vector3(5, 0, 4), 
+    new THREE.Vector3(4, 4, 3), 
 ], true);
 
-// Crie a geometria a partir da curva
-var pontosCurva = curvaAviao.getPoints(100); // Obtenha pontos ao longo da curva
+var pontosCurva = curvaAviao.getPoints(100);
 var geometriaLinha = new THREE.BufferGeometry().setFromPoints(pontosCurva);
 
-// Crie o material tracejado (branco)
 var materialTracejado = new THREE.LineDashedMaterial({
-    color: 0xffffff, // Cor da linha (branca)
-    dashSize: 0.5,   // Tamanho do traço
-    gapSize: 0.2     // Tamanho do espaço entre traços
+    color: 0xffffff,
+    dashSize: 0.5,  
+    gapSize: 0.2    
 });
 
-// Crie a linha
 var linhaTracejada = new THREE.Line(geometriaLinha, materialTracejado);
-linhaTracejada.computeLineDistances(); // Necessário para linhas tracejadas
+linhaTracejada.computeLineDistances();
 
-// Adicione a linha à cena
 scene.add(linhaTracejada);
 
 
